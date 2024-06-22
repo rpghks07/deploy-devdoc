@@ -1,0 +1,72 @@
+plugins {
+	id 'java'
+	// WebSecurityConfigurerAdapter 이용을 위해 2.X 버전으로 변경.
+	id 'org.springframework.boot' version '2.5.3'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.devdoc'
+version = '0.0.1'
+sourceCompatibility = '1.8'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+// 환경변수를 사용해 개발환경 or 배포환경 구분
+def activeProfile = System.getenv("SPRING_PROFILES_ACTIVE") ?: "dev"
+
+
+dependencies {
+	// Spring Boot 기본 스타터
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+	implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 애플리케이션 개발
+
+	// Lombok
+	implementation 'org.projectlombok:lombok' // 롬복 사용
+	annotationProcessor 'org.projectlombok:lombok' // 롬복 어노테이션 처리
+
+	// Jackson
+	implementation 'com.fasterxml.jackson.core:jackson-databind' // JSON 처리
+
+	// MariaDB와 H2 데이터베이스
+	implementation 'org.mariadb.jdbc:mariadb-java-client' // MariaDB 사용
+	implementation 'com.h2database:h2' // H2 데이터베이스 사용
+	//implementation 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2' // H2 데이터베이스 런타임
+
+
+	// SpringDoc OpenAPI
+	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2' // OpenAPI UI 제공
+
+	// 테스트 관련
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' // 테스트 지원
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 플랫폼 런처
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.6' // Spring Security 사용
+	implementation 'org.springframework.security:spring-security-config:5.6.3' // Security 설정 지원
+	implementation 'org.springframework.security:spring-security-web:5.6.3' // 웹 보안 지원
+
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' // JSON Web Token 사용
+
+}
+
+
+test {
+	useJUnitPlatform()
+}
+
